@@ -1,5 +1,6 @@
 package model.dao.impl;
 
+import com.mysql.cj.protocol.Resultset;
 import db.DB;
 import db.DbException;
 import model.dao.SellerDao;
@@ -47,16 +48,8 @@ public class SellerDaoJDBC implements SellerDao {
             st.setInt(1,id);
             rs = st.executeQuery();
             if(rs.next()) {
-                Department dep = new Department();
-                dep.setId(rs.getInt("DepartmentId"));
-                dep.setName(rs.getString("DepName"));
-                Seller obj = new Seller();
-                obj.setName(rs.getString("Name"));
-                obj.setId(rs.getInt("Id"));
-                obj.setBirthdate(rs.getDate("BirthDate"));
-                obj.setEmail(rs.getString("Email"));
-                obj.setBaseSalary(rs.getDouble("BaseSalary"));
-                obj.setDepartment(dep);
+                Department dep = instantiateDepartment(rs);
+                Seller obj = instantiateSeller(rs, dep);
                 return obj;
             }
             return null;
@@ -71,5 +64,22 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public List<Seller> findAll() {
         return List.of();
+    }
+
+    private Department instantiateDepartment(ResultSet rs) throws SQLException {
+        Department dep =  new Department();
+        dep.setId(rs.getInt("DepartmentId"));
+        dep.setName(rs.getString("DepName"));
+        return dep;
+    }
+    private Seller instantiateSeller(ResultSet rs,Department dep) throws SQLException {
+        Seller obj = new Seller();
+        obj.setName(rs.getString("Name"));
+        obj.setId(rs.getInt("Id"));
+        obj.setBirthdate(rs.getDate("BirthDate"));
+        obj.setEmail(rs.getString("Email"));
+        obj.setBaseSalary(rs.getDouble("BaseSalary"));
+        obj.setDepartment(dep);
+        return obj;
     }
 }
