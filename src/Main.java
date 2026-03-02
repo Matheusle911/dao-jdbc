@@ -8,11 +8,13 @@ import model.entities.Seller;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
         System.out.println("=== Test 1: seller findById =======");
         SellerDao sellerDao = DaoFactory.createSellerDao();
@@ -47,5 +49,14 @@ public class Main {
         seller.setEmail("MarthaWayne@gmail.com");
         sellerDao.update(seller);
         System.out.println("Update completed!");
+
+        System.out.println("");
+        System.out.println("=== Test 6: seller delete =======");
+        System.out.println("Enter id for delete test: ");
+        int id = sc.nextInt();
+        sellerDao.deleteById(id);
+        System.out.println("Delete completed!");
+        sc.close();
+
     }
 }
